@@ -1,0 +1,95 @@
+[  
+  {
+    "flightNumber": 1,
+    "sourceAirport": "A",
+    "destinationAirport": "B",
+    "departureTime": "2017-01-25T10:00:00Z",
+    "arrivalTime": "2017-01-25T10:30:00Z"
+  },
+  {
+    "flightNumber": 2,
+    "sourceAirport": "B",
+    "destinationAirport": "C",
+    "departureTime": "2017-01-25T10:30:00Z",
+    "arrivalTime": "2017-01-25T10:50:00Z"
+  },
+  {
+    "flightNumber": 5,
+    "sourceAirport": "E",
+    "destinationAirport": "F",
+    "departureTime": "2017-01-26T13:10:00Z",
+    "arrivalTime": "2017-01-26T14:00:00Z"
+  },
+  {
+    "flightNumber": 3,
+    "sourceAirport": "C",
+    "destinationAirport": "D",
+    "departureTime": "2017-01-25T12:00:00Z",
+    "arrivalTime": "2017-01-25T12:30:00Z"
+  },
+  {
+    "flightNumber": 4,
+    "sourceAirport": "D",
+    "destinationAirport": "E",
+    "departureTime": "2017-01-25T13:00:00Z",
+    "arrivalTime": "2017-01-25T13:30:00Z"
+  },
+  {
+    "flightNumber": 5,
+    "sourceAirport": "E",
+    "destinationAirport": "F",
+    "departureTime": "2017-01-25T13:10:00Z",
+    "arrivalTime": "2017-01-25T14:00:00Z"
+  },
+  
+  {
+    "flightNumber": 7,
+    "sourceAirport": "C",
+    "destinationAirport": "D",
+    "departureTime": "2017-01-25T11:00:00Z",
+    "arrivalTime": "2017-01-25T11:30:00Z"
+  },
+  {
+    "flightNumber": 6,
+    "sourceAirport": "A",
+    "destinationAirport": "C",
+    "departureTime": "2017-01-25T10:10:00Z",
+    "arrivalTime": "2017-01-25T14:00:00Z"
+  },
+  {
+    "flightNumber": 8,
+    "sourceAirport": "B",
+    "destinationAirport": "D",
+    "departureTime": "2017-01-25T11:00:00Z",
+    "arrivalTime": "2017-01-25T12:00:00Z"
+  },
+  {
+    "flightNumber": 9,
+    "sourceAirport": "B",
+    "destinationAirport": "D",
+    "departureTime": "2017-01-25T10:50:00Z",
+    "arrivalTime": "2017-01-25T11:40:00Z"
+  },
+  {
+    "flightNumber": 10,
+    "sourceAirport": "C",
+    "destinationAirport": "E",
+    "departureTime": "2017-01-25T10:00:00Z",
+    "arrivalTime": "2017-01-25T10:40:00Z"
+  },
+  {
+    "flightNumber": 11,
+    "sourceAirport": "C",
+    "destinationAirport": "E",
+    "departureTime": "2017-01-25T11:30:00Z",
+    "arrivalTime": "2017-01-25T12:10:00Z"
+  },
+  {
+    "flightNumber": 12,
+    "sourceAirport": "D",
+    "destinationAirport": "C",
+    "departureTime": "2017-01-25T12:30:00Z",
+    "arrivalTime": "2017-01-25T13:00:00Z"
+  },
+  
+]

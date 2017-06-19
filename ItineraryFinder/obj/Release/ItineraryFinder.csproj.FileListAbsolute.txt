@@ -1,0 +1,7 @@
+E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\bin\Release\ItineraryFinder.exe.config
+E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\bin\Release\ItineraryFinder.exe
+E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\bin\Release\ItineraryFinder.pdb
+E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\bin\Release\Newtonsoft.Json.dll
+E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\bin\Release\Newtonsoft.Json.xml
+E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\obj\Release\ItineraryFinder.exe
+E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\obj\Release\ItineraryFinder.pdb
