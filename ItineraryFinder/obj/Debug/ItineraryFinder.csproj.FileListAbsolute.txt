@@ -6,3 +6,11 @@ E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\bin\Debug\Newtonsoft.Json.xm
 E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\obj\Debug\ItineraryFinder.csprojResolveAssemblyReference.cache
 E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\obj\Debug\ItineraryFinder.exe
 E:\Interview\sigfig\ItineraryFinder\ItineraryFinder\obj\Debug\ItineraryFinder.pdb
+C:\personal\ItineraryFinder\ItineraryFinder\bin\Debug\ItineraryFinder.exe.config
+C:\personal\ItineraryFinder\ItineraryFinder\obj\Debug\ItineraryFinder.exe
+C:\personal\ItineraryFinder\ItineraryFinder\obj\Debug\ItineraryFinder.pdb
+C:\personal\ItineraryFinder\ItineraryFinder\bin\Debug\ItineraryFinder.exe
+C:\personal\ItineraryFinder\ItineraryFinder\bin\Debug\ItineraryFinder.pdb
+C:\personal\ItineraryFinder\ItineraryFinder\bin\Debug\Newtonsoft.Json.dll
+C:\personal\ItineraryFinder\ItineraryFinder\bin\Debug\Newtonsoft.Json.xml
+C:\personal\ItineraryFinder\ItineraryFinder\obj\Debug\ItineraryFinder.csprojResolveAssemblyReference.cache

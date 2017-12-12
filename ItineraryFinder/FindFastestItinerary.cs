@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ItineraryFinder
 {
     public class FindFastestItinerary
     {
-        private List<FlightInfo> allFlightInfo;
-        private string sourceAirport;
-        private string destinationAirport;
-        private HashSet<string> openNode;
-        private HashSet<string> closeNode;
+        private readonly List<FlightInfo> _allFlightInfo;
+        private readonly string _sourceAirport;
+        private readonly string _destinationAirport;
+        private readonly HashSet<string> _openNode;
+        private readonly HashSet<string> _closeNode;
         public struct prevItineraryInfo
         {
             public string departureAirport;
@@ -25,26 +22,26 @@ namespace ItineraryFinder
         // constructor
         public FindFastestItinerary(List<FlightInfo> allFlight, string srcAirport, string dstAirport)
         {
-            allFlightInfo = allFlight;
-            sourceAirport = srcAirport;
-            destinationAirport = dstAirport;
-            openNode = new HashSet<string>();
-            closeNode = new HashSet<string>();
+            _allFlightInfo = allFlight;
+            _sourceAirport = srcAirport;
+            _destinationAirport = dstAirport;
+            _openNode = new HashSet<string>();
+            _closeNode = new HashSet<string>();
         }
 
         public List<prevItineraryInfo> ItineraryFinder()
         {
             try
             {
-                openNode.Add(sourceAirport);
-                List<List<prevItineraryInfo>> allRoute = FinderPartialItinerary();
+                _openNode.Add(_sourceAirport);
+                var allRoute = FinderPartialItinerary();
                 if (allRoute.Count == 0)
                     return null;
-                int useThisRoute = -1;
-                DateTime arriveTime = DateTime.MaxValue;
-                for (int i = 0; i < allRoute.Count; i++)
+                var useThisRoute = -1;
+                var arriveTime = DateTime.MaxValue;
+                for (var i = 0; i < allRoute.Count; i++)
                 {
-                    if (allRoute[i][allRoute[i].Count - 1].arriveAirport == destinationAirport
+                    if (allRoute[i][allRoute[i].Count - 1].arriveAirport == _destinationAirport
                         && arriveTime > allRoute[i][allRoute[i].Count - 1].arriveTime)
                     {
                         arriveTime = allRoute[i][allRoute[i].Count - 1].arriveTime;
@@ -55,7 +52,7 @@ namespace ItineraryFinder
             }
             catch(Exception ex)
             {
-                CollectError.CollectErrorToFile(ex, Program.errorFile);
+                CollectError.CollectErrorToFile(ex, Program.ErrorFile);
                 return null;
             }
         } // end: public List<prevItineraryInfo> ItineraryFinder()
@@ -64,43 +61,41 @@ namespace ItineraryFinder
         {
             try
             {
-                List<List<prevItineraryInfo>> allRoute = new List<List<prevItineraryInfo>>();
-                while (openNode.Count != 0)
+                var allRoute = new List<List<prevItineraryInfo>>();
+                while (_openNode.Count != 0)
                 {
                     // copy open node set in an array since open node set will be changed during this process
-                    string[] openNodeArray = new string[openNode.Count];
-                    int j = 0;
-                    foreach (string oneAirport in openNode)
+                    var openNodeArray = new string[_openNode.Count];
+                    var j = 0;
+                    foreach (var oneAirport in _openNode)
                         openNodeArray[j++] = oneAirport;
 
-                    foreach (string currAirport in openNodeArray)
+                    foreach (var currAirport in openNodeArray)
                     {
-                        if (currAirport == destinationAirport)
+                        if (currAirport == _destinationAirport)
                         {
                             // need to exam all route whether we've already get the fastest one, if not, return here to continue search
-                            if (isRouteFastest(allRoute) == true)
+                            if (IsRouteFastest(allRoute))
                                 return allRoute;
-                            else
-                            {
-                                openNode.Remove(currAirport);                                
-                                continue;
-                            }
+
+                            _openNode.Remove(currAirport);
+                            continue;
                         }
-                        else // move the current airport to the close set (can't be the destination airport in the future search)
-                        {
-                            openNode.Remove(currAirport);
-                            closeNode.Add(currAirport);
-                        }
+                        _openNode.Remove(currAirport);
+                        _closeNode.Add(currAirport);
+
 
                         // get all the possible destination airport from this current airport
-                        HashSet<string> nextPossibleAirport = new HashSet<string>();
-                        for (int i = 0; i < allFlightInfo.Count; i++)
-                            if (currAirport == allFlightInfo[i].sourceAirport)
-                                nextPossibleAirport.Add(allFlightInfo[i].destinationAirport);
+                        var nextPossibleAirport = new HashSet<string>();
+                        foreach (var oneFlightInfo in _allFlightInfo)
+                        {
+                            if (currAirport == oneFlightInfo.SourceAirport)
+                                nextPossibleAirport.Add(oneFlightInfo.DestinationAirport);
+                        }
 
                         // if there's more than one destination airport, we need to copy the current route for multiple possible routes
-                        int needToCopyThisRoute = -1;
-                        for (int i = 0; i < allRoute.Count; i++)
+                        var needToCopyThisRoute = -1;
+                        for (var i = 0; i < allRoute.Count; i++)
                         {
                             if (allRoute[i][allRoute[i].Count - 1].arriveAirport == currAirport)
                             {
@@ -110,19 +105,19 @@ namespace ItineraryFinder
                         }
                         if (needToCopyThisRoute != -1)
                         {
-                            for (int i = 0; i < nextPossibleAirport.Count - 1; i++)
+                            for (var i = 0; i < nextPossibleAirport.Count - 1; i++)
                             {
-                                List<prevItineraryInfo> cloneList = new List<prevItineraryInfo>(allRoute[needToCopyThisRoute]);
+                                var cloneList = new List<prevItineraryInfo>(allRoute[needToCopyThisRoute]);
                                 allRoute.Add(cloneList);
                             }
                         }
 
                         // check all the destination airport, if it's a possible route, add it to the route, if not, remove the current route
-                        foreach (string nextAirport in nextPossibleAirport)
+                        foreach (var nextAirport in nextPossibleAirport)
                         {
                             // get the route we are working with
-                            int weAreInThisRoute = -1;
-                            for (int i = 0; i < allRoute.Count; i++)
+                            var weAreInThisRoute = -1;
+                            for (var i = 0; i < allRoute.Count; i++)
                             {
                                 if (allRoute[i][allRoute[i].Count - 1].arriveAirport == currAirport)
                                 {
@@ -131,56 +126,57 @@ namespace ItineraryFinder
                                 }
                             }
                             // if the destination is in the close set, ignore this route
-                            if (closeNode.Contains(nextAirport))
+                            if (_closeNode.Contains(nextAirport))
                             {
                                 allRoute.Remove(allRoute[weAreInThisRoute]);
                                 continue;
                             }
                             // calculate time from here to next airport
-                            bool isExist = false;
-                            int flightNumber = -1;
-                            DateTime arriveTime = DateTime.MaxValue;
-                            DateTime departureTime = DateTime.MaxValue;
-                            string departureAirport = "";
-                            string arriveAirport = "";
-                            prevItineraryInfo oneItinerary = new prevItineraryInfo();
+                            var isExist = false;
+                            var flightNumber = -1;
+                            var arriveTime = DateTime.MaxValue;
+                            var departureTime = DateTime.MaxValue;
+                            var departureAirport = "";
+                            var arriveAirport = "";
+                            var oneItinerary = new prevItineraryInfo();
 
-                            if (currAirport == sourceAirport) // don't have to check 20 mins interval
+                            if (currAirport == _sourceAirport) // don't have to check 20 mins interval
                             {
-                                for (int i = 0; i < allFlightInfo.Count; i++)
+                                foreach(var oneFlightInfo in _allFlightInfo)
                                 {
-                                    if (allFlightInfo[i].sourceAirport == currAirport
-                                        && allFlightInfo[i].destinationAirport == nextAirport)
-                                        if (arriveTime > allFlightInfo[i].arrivalTime)
+                                    if (oneFlightInfo.SourceAirport == currAirport
+                                        && oneFlightInfo.DestinationAirport == nextAirport)
+                                        if (arriveTime > oneFlightInfo.ArrivalTime)
                                         {
-                                            departureAirport = allFlightInfo[i].sourceAirport;
-                                            arriveAirport = allFlightInfo[i].destinationAirport;
-                                            departureTime = allFlightInfo[i].departureTime;
-                                            arriveTime = allFlightInfo[i].arrivalTime;
-                                            flightNumber = allFlightInfo[i].flightNumber;
+                                            departureAirport = oneFlightInfo.SourceAirport;
+                                            arriveAirport = oneFlightInfo.DestinationAirport;
+                                            departureTime = oneFlightInfo.DepartureTime;
+                                            arriveTime = oneFlightInfo.ArrivalTime;
+                                            flightNumber = oneFlightInfo.FlightNumber;
                                             isExist = true;
                                         }
                                 }
                             } // end: if (currAirport == sourceAirport)
                             else // have to check 20 mins interval
                             {
-                                for (int i = 0; i < allFlightInfo.Count; i++)
+                                foreach (var oneFlightInfo in _allFlightInfo)
                                 {
-                                    if (allFlightInfo[i].sourceAirport == currAirport
-                                        && allFlightInfo[i].destinationAirport == nextAirport
-                                        && (allRoute[weAreInThisRoute][allRoute[weAreInThisRoute].Count - 1].arriveTime.AddMinutes(20) <= allFlightInfo[i].departureTime))
-                                        if (arriveTime > allFlightInfo[i].arrivalTime)
+                                    if (oneFlightInfo.SourceAirport == currAirport
+                                        && oneFlightInfo.DestinationAirport == nextAirport
+                                        && (allRoute[weAreInThisRoute][allRoute[weAreInThisRoute].Count - 1].arriveTime
+                                                .AddMinutes(20) <= oneFlightInfo.DepartureTime))
+                                        if (arriveTime > oneFlightInfo.ArrivalTime)
                                         {
-                                            departureAirport = allFlightInfo[i].sourceAirport;
-                                            arriveAirport = allFlightInfo[i].destinationAirport;
-                                            departureTime = allFlightInfo[i].departureTime;
-                                            arriveTime = allFlightInfo[i].arrivalTime;
-                                            flightNumber = allFlightInfo[i].flightNumber;
+                                            departureAirport = oneFlightInfo.SourceAirport;
+                                            arriveAirport = oneFlightInfo.DestinationAirport;
+                                            departureTime = oneFlightInfo.DepartureTime;
+                                            arriveTime = oneFlightInfo.ArrivalTime;
+                                            flightNumber = oneFlightInfo.FlightNumber;
                                             isExist = true;
                                         }
                                 }
                             }
-                            if (isExist == true)
+                            if (isExist)
                             {
                                 oneItinerary.departureAirport = departureAirport;
                                 oneItinerary.arriveAirport = arriveAirport;
@@ -193,10 +189,10 @@ namespace ItineraryFinder
                                 allRoute.Remove(allRoute[weAreInThisRoute]);
                                 continue;
                             }
-                            if (!openNode.Contains(nextAirport))
-                                openNode.Add(nextAirport);
+                            if (!_openNode.Contains(nextAirport))
+                                _openNode.Add(nextAirport);
 
-                            List<prevItineraryInfo> oneRoute = new List<prevItineraryInfo>();
+                            var oneRoute = new List<prevItineraryInfo>();
                             if (weAreInThisRoute == -1) // for the first flight
                             {
                                 if (oneItinerary.flightNumber != 0)
@@ -217,35 +213,33 @@ namespace ItineraryFinder
             }
             catch (Exception ex)
             {
-                CollectError.CollectErrorToFile(ex, Program.errorFile);
+                CollectError.CollectErrorToFile(ex, Program.ErrorFile);
                 return null;
             }
         }// end: public List<List<prevItineraryInfo>> FinderPartialItinerary()
 
-        public bool isRouteFastest(List<List<prevItineraryInfo>> allRoute)
+        public bool IsRouteFastest(List<List<prevItineraryInfo>> allRoute)
         {
             try
             {
-                DateTime destinationAirportArriveTime = DateTime.MaxValue;
-                DateTime partialTripArriveTime = DateTime.MaxValue;
-                for (int i = 0; i < allRoute.Count; i++)
+                var destinationAirportArriveTime = DateTime.MaxValue;
+                var partialTripArriveTime = DateTime.MaxValue;
+                //for (int i = 0; i < allRoute.Count; i++)
+                foreach(var oneRoute in allRoute)
                 {
-                    if (allRoute[i][allRoute[i].Count - 1].arriveAirport == destinationAirport)
+                    if (oneRoute[oneRoute.Count - 1].arriveAirport == _destinationAirport)
                     {
-                        if (destinationAirportArriveTime > allRoute[i][allRoute[i].Count - 1].arriveTime)
-                            destinationAirportArriveTime = allRoute[i][allRoute[i].Count - 1].arriveTime;
+                        if (destinationAirportArriveTime > oneRoute[oneRoute.Count - 1].arriveTime)
+                            destinationAirportArriveTime = oneRoute[oneRoute.Count - 1].arriveTime;
                     }
-                    else if (partialTripArriveTime > allRoute[i][allRoute[i].Count - 1].arriveTime)
-                        partialTripArriveTime = allRoute[i][allRoute[i].Count - 1].arriveTime;
+                    else if (partialTripArriveTime > oneRoute[oneRoute.Count - 1].arriveTime)
+                        partialTripArriveTime = oneRoute[oneRoute.Count - 1].arriveTime;
                 }
-                if (destinationAirportArriveTime <= partialTripArriveTime)
-                    return true;
-                else
-                    return false;
+                return destinationAirportArriveTime <= partialTripArriveTime;
             }
             catch (Exception ex)
             {
-                CollectError.CollectErrorToFile(ex, Program.errorFile);
+                CollectError.CollectErrorToFile(ex, Program.ErrorFile);
                 return false;
             }
         }// end: public bool isRouteFastest(List<List<prevItineraryInfo>> route)
@@ -258,11 +252,11 @@ namespace ItineraryFinder
             }
             else
             {
-                for (int i = 0; i < fastestRoute.Count; i++)
+                foreach(var oneRoute in fastestRoute)
                 {
                     Console.WriteLine("Board flight {0} to depart {1} at {2} and arrive at {3} at {4}",
-                        fastestRoute[i].flightNumber, fastestRoute[i].departureAirport, fastestRoute[i].departureTime,
-                        fastestRoute[i].arriveAirport, fastestRoute[i].arriveTime);
+                        oneRoute.flightNumber, oneRoute.departureAirport, oneRoute.departureTime,
+                        oneRoute.arriveAirport, oneRoute.arriveTime);
                 }
             }
             Console.WriteLine("Press any key to exit...");
